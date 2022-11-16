@@ -1,5 +1,11 @@
+import CanvasWrapper from "./features/CanvasWrapper";
+
 function App() {
-  return <div className="text-3xl">App</div>;
+  return (
+    <div className="">
+      <CanvasWrapper />
+    </div>
+  );
 }
 
 export default App;
