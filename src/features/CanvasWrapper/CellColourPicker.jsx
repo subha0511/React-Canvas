@@ -2,7 +2,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useGrid } from "./context/GridContext";
 import { useCanvasStore } from "./state/canvasState";
-import { colors, colorArr } from "../../constants";
+import { colors } from "../../constants";
 import { BsCheck2 } from "react-icons/bs";
 
 const CellColourPicker = () => {
@@ -12,7 +12,7 @@ const CellColourPicker = () => {
   const { row, col } = useCanvasStore((state) => state.crosshair);
 
   const setColorInBoard = () => {
-    updateGridCell(row, col, currActiveColor);
+    updateGridCell(row, col, currActiveColor + 1);
     setCellFocused(false);
   };
 
@@ -25,7 +25,7 @@ const CellColourPicker = () => {
       exit="closed"
       variants={containerVariant}
     >
-      {colors.map((color, idx) => (
+      {colors.slice(1).map((color, idx) => (
         <motion.div
           key={idx}
           className={`h-8 w-8 ${color} mx-1.5 grid place-items-center first:ml-0.5`}
