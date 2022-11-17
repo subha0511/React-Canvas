@@ -15,8 +15,9 @@ function Canvas() {
     (state) => state.onKeyboardTranslate
   );
   const onKeyboardScale = useCanvasStore((state) => state.onKeyboardScale);
+  const onKeyboardEnter = useCanvasStore((state) => state.onKeyboardEnter);
 
-  useKeyPress("Enter", () => setCellFocused(true));
+  useKeyPress("Enter", () => onKeyboardEnter());
   useKeyPress("Escape", () => setCellFocused(false));
   useKeyPress("ArrowRight", () => onKeyboardTranslate({ d_x: 1 }));
   useKeyPress("ArrowLeft", () => onKeyboardTranslate({ d_x: -1 }));
@@ -41,7 +42,7 @@ function Canvas() {
 
   useAnimationFrame(draw);
 
-  const pick = (evt) => {
+  const focusCell = (evt) => {
     const { pageX, pageY } = evt;
     if (
       mouseDownPosRef.current &&
@@ -63,49 +64,12 @@ function Canvas() {
     const canvas = canvasRef.current;
 
     canvas.addEventListener("mousedown", setMouseDownPos);
-    canvas.addEventListener("mouseup", pick);
+    canvas.addEventListener("mouseup", focusCell);
     return () => {
       canvas.removeEventListener("mousedown", setMouseDownPos);
-      canvas.removeEventListener("mouseup", pick);
+      canvas.removeEventListener("mouseup", focusCell);
     };
   }, []);
-
-  // const keyDownEvent = (event) => {
-  //   const { code, ctrlKey } = event;
-  //   if (code === "ArrowRight") {
-  //     onKeyboardTranslate({ d_x: 1 });
-  //   }
-  //   if (code === "ArrowLeft") {
-  //     onKeyboardTranslate({ d_x: -1 });
-  //   }
-  //   if (code === "ArrowUp") {
-  //     if (ctrlKey) {
-  //       onKeyboardScale({ d_y: -1 });
-  //     } else {
-  //       onKeyboardTranslate({ d_y: -1 });
-  //     }
-  //   }
-  //   if (code === "ArrowDown") {
-  //     if (ctrlKey) {
-  //       onKeyboardScale({ d_y: 1 });
-  //     } else {
-  //       onKeyboardTranslate({ d_y: 1 });
-  //     }
-  //   }
-  //   if (code === "Escape") {
-  //     setCellFocused(false);
-  //   }
-  //   if (code === "Enter") {
-  //     setCellFocused(true);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   window.addEventListener("keydown", keyDownEvent);
-  //   return () => {
-  //     window.removeEventListener("keydown", keyDownEvent);
-  //   };
-  // }, []);
 
   useEffect(() => {
     draw();
@@ -123,37 +87,3 @@ function Canvas() {
 }
 
 export default Canvas;
-
-// const drawGrid = () => {
-//   const ctx = canvasContextRef.current;
-//   if (!ctx) {
-//     return;
-//   }
-//   ctx.lineWidth = 1;
-//   ctx.strokeStyle = "rgba(0,0,0,0.75)";
-//   ctx.imageSmoothingEnabled = true;
-//   let y = baseOffset + 0.5;
-//   while (y < canvasRef.current.height) {
-//     ctx.beginPath();
-//     ctx.moveTo(baseOffset, y);
-//     ctx.lineTo(
-//       canvasRef.current.width -
-//         ((canvasRef.current.width - baseOffset) % sideLength),
-//       y
-//     );
-//     ctx.stroke();
-//     y += sideLength;
-//   }
-//   let x = baseOffset + 0.5;
-//   while (x < canvasRef.current.height) {
-//     ctx.beginPath();
-//     ctx.moveTo(x, baseOffset);
-//     ctx.lineTo(
-//       x,
-//       canvasRef.current.height -
-//         ((canvasRef.current.height - baseOffset) % sideLength)
-//     );
-//     ctx.stroke();
-//     x += sideLength;
-//   }
-// };
