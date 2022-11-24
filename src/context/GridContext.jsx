@@ -1,5 +1,5 @@
 import { createContext, useContext, useRef, useState, useEffect } from "react";
-import { colorArr, squareCount } from "../../../constants";
+import { colorArr, squareCount } from "../constants";
 import { io } from "socket.io-client";
 import useSWR from "swr";
 
@@ -15,8 +15,9 @@ export const GridContextProvider = ({ children }) => {
     new Uint8ClampedArray(Array(4 * squareCount * squareCount).fill(0))
   );
 
-  const { data, error, isValidating } = useSWR("getBoard", fetcher, {
+  const { data, error, isLoading } = useSWR("getBoard", fetcher, {
     refreshInterval: 0, // not refresh is 0
+    errorRetryCount: 1,
   });
 
   const [socket, setSocket] = useState();
@@ -49,14 +50,14 @@ export const GridContextProvider = ({ children }) => {
   }, [socket]);
 
   return (
-    <GridContext.Provider value={{ gridRef, socket }}>
+    <GridContext.Provider value={{ gridRef, socket, isLoading, error }}>
       {children}
     </GridContext.Provider>
   );
 };
 
 export const useGrid = () => {
-  const { gridRef, socket } = useContext(GridContext);
+  const { gridRef, socket, isLoading, error } = useContext(GridContext);
 
   const updateGridCell = (row, col, colorArrIdx) => {
     let offset = 4 * (row * squareCount + col);
@@ -66,7 +67,7 @@ export const useGrid = () => {
     socket.emit("setCell", { row, col, offset, color: colorArrIdx });
   };
 
-  return { gridRef, updateGridCell };
+  return { gridRef, updateGridCell, isLoading, error };
 };
 
 //Get bit string buffer from backend

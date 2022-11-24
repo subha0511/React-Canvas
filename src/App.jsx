@@ -1,9 +1,12 @@
+import { GridContextProvider } from "./context/GridContext";
 import CanvasWrapper from "./features/CanvasWrapper";
 
 function App() {
   return (
     <div className="">
-      <CanvasWrapper />
+      <GridContextProvider>
+        <CanvasWrapper />
+      </GridContextProvider>
     </div>
   );
 }

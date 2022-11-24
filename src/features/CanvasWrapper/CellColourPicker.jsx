@@ -1,19 +1,20 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { useGrid } from "./context/GridContext";
-import { useCanvasStore } from "./state/canvasState";
+import { useGrid } from "../../context/GridContext";
+import { useCanvasStore } from "./state/canvasStore";
 import { colors } from "../../constants";
 import { BsCheck2 } from "react-icons/bs";
 
 const CellColourPicker = () => {
   const { updateGridCell } = useGrid();
   const [currActiveColor, setCurrActiveColor] = useState(-1);
-  const setCellFocused = useCanvasStore((state) => state.setCellFocused);
+  const { setCellFocused } = useCanvasStore((state) => state.actions);
   const { row, col } = useCanvasStore((state) => state.crosshair);
 
   const setColorInBoard = () => {
     updateGridCell(row, col, currActiveColor + 1);
     setCellFocused(false);
+    setCurrActiveColor(-1);
   };
 
   return (

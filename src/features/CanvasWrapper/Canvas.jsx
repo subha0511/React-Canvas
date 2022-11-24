@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
-import { useCanvasStore } from "./state/canvasState";
-import { useGrid } from "./context/GridContext";
+import { useCanvasStore } from "./state/canvasStore";
+import { useGrid } from "../../context/GridContext";
 import { sideLength, squareCount, delta } from "../../constants";
 import { useAnimationFrame } from "../../hooks/useAnimationFrame";
 import useKeyPress from "../../hooks/useKeyPress";
@@ -9,13 +9,21 @@ function Canvas() {
   const canvasRef = useRef();
   const mouseDownPosRef = useRef({});
 
-  const focusPan = useCanvasStore((state) => state.focusPan);
-  const setCellFocused = useCanvasStore((state) => state.setCellFocused);
-  const onKeyboardTranslate = useCanvasStore(
-    (state) => state.onKeyboardTranslate
-  );
-  const onKeyboardScale = useCanvasStore((state) => state.onKeyboardScale);
-  const onKeyboardEnter = useCanvasStore((state) => state.onKeyboardEnter);
+  const {
+    focusPan,
+    setCellFocused,
+    onKeyboardTranslate,
+    onKeyboardScale,
+    onKeyboardEnter,
+  } = useCanvasStore((state) => state.actions);
+
+  // const focusPan = useCanvasStore((state) => state.focusPan);
+  // const setCellFocused = useCanvasStore((state) => state.setCellFocused);
+  // const onKeyboardTranslate = useCanvasStore(
+  //   (state) => state.onKeyboardTranslate
+  // );
+  // const onKeyboardScale = useCanvasStore((state) => state.onKeyboardScale);
+  // const onKeyboardEnter = useCanvasStore((state) => state.onKeyboardEnter);
 
   useKeyPress("Enter", () => onKeyboardEnter());
   useKeyPress("Escape", () => setCellFocused(false));
